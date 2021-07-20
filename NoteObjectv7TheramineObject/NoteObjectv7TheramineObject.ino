@@ -1,7 +1,6 @@
 
 class Note{
   public:
-  
     friend void validateTest();
     Note(char noteInput);
     Note(char noteInput, int noteVelocity);
@@ -18,7 +17,6 @@ class Note{
     //array full of Note on array Ids
     static const int arrayOnIds[16];
     static const int arrayOffIds[16];
-
   private:
     int noteState;
     int setOctave;
@@ -32,10 +30,6 @@ class Note{
     int memberIDOff;
     int temporaryIDSlotIndex;    
 };
-
-
-
-
 
 Note::Note(char noteInput):noteState(0),noteInput(noteInput),sharpFlat(0),noteVelocity(100){
   //no octave is applied  
@@ -85,14 +79,13 @@ void Note::noteOn(){
         IDSlotAssignment[i]  = 1;
         break;
       } 
-      
     }
     Serial.println(memberIDOn);
     noteState = memberIDOn;
     executeNoteState();
-
   }
 }
+
 void Note::noteOff(){
   //note off
   if(noteState >= 144 && noteState < 159)
@@ -179,26 +172,6 @@ void Note::validateInput(){
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //0-1023 analog read
 class Theremin{
   public:
@@ -206,43 +179,29 @@ class Theremin{
     void readSensors();
     void active();
   private:
-  
     int sensor1Val;
     int analogPin;
     int threshold;
     int hiRangeLimit;
-    
     int noteSections;
-    
-    
     Note * notes[30];
-    
-    
     static const int analogResolution = 1024;
 };
 
 Theremin::Theremin():analogPin(3),threshold(30), hiRangeLimit(1000){
-   
    //sections of 81
    noteSections = (analogResolution - threshold - (analogResolution-hiRangeLimit))/12;
-   
-   
-   
    int noteName = 'a';
    for(int i=0; i< 7; i ++){
      notes[i] = new Note(noteName);
      noteName++;
  }
-   
-  
 }
 void Theremin::readSensors(){
-
   sensor1Val = analogRead(analogPin);
 }
 
 void Theremin::active(){
-
   if(sensor1Val > threshold && sensor1Val < hiRangeLimit){
     //starting note a starts at 30 + noteSections which is ending at 111
     if(sensor1Val <= (threshold+noteSections))
@@ -265,38 +224,15 @@ void Theremin::active(){
       notes[9] -> noteOn();
     else if(sensor1Val <= (threshold+(noteSections*12)))
       notes[10] -> noteOn();
-    
     Serial.print(sensor1Val);  
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//Note note1('a', 40); note,velocity
-
-//Note note1('a', 40, 2); note,velocity,octave
-
-//.changeNoteOctave(2)
-//Note(char noteInput, char sharpFlat,int MIDIvelocity, int octave) note, # or b , velocity, octave
-
+  //Note note1('a', 40); note,velocity
+  //Note note1('a', 40, 2); note,velocity,octave
+  //.changeNoteOctave(2)
+  //Note(char noteInput, char sharpFlat,int MIDIvelocity, int octave) note, # or b , velocity, octave
   //Note note1point5('a','#', 40, 1);
-  
-  
   Theremin theremin;
-  
   int delayRate = 60;
   Note note1('a', 80, 2); 
   Note note2point5('b','b', 40, 0);
@@ -306,23 +242,16 @@ void Theremin::active(){
   Note note5('e', 30);
   Note note6('f', 14);
   Note note7('g', 20);
-  
 void setup() {
   //Serial3.begin(31250);
   Serial.begin(9600);
   Serial3.write(225);
   Serial3.write(63);
   Serial3.write(63);
-  
-  
- 
 }
 
 void loop() {
   theremin.readSensors();
-  
-  
-  
   note4.noteOn();
   note6.noteOn();
   note1.changeNoteOctave(1);
@@ -330,8 +259,6 @@ void loop() {
   note3.changeNoteOctave(1);
   note3.noteOn();
   delay(2000);
-  
-  
   /*
  Serial3.write(224);
  for(int i = 63; i <127; i++){
@@ -371,52 +298,4 @@ void loop() {
    note4.noteOff();
    note6.noteOff();
    note1.noteOff();
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-/*
-  for(int i = -4; i <= 4; i ++){
-  note7.changeNoteOctave(i);
-  note7.noteOn();
-  delay(delayRate);
-  note7.noteOff();
-  
-}
-
- for(int i = -4; i <= 4; i ++){
-  
-  note2point5.changeNoteOctave(i);
-  note2point5.noteOn();
-  delay(delayRate);
-  note2point5.noteOff();
-  
-}
-
-for(int i = -4; i <= 4; i ++){
-  
-  note4.changeNoteOctave(i);
-  note4.noteOn();
-  delay(delayRate);
-  note4.noteOff();
-}
-
-*/
+} 
