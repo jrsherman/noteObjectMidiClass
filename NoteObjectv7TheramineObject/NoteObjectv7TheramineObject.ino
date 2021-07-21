@@ -1,4 +1,4 @@
-
+//hello kevin!
 class Note{
   public:
     friend void validateTest();
